@@ -3,4 +3,3 @@
 12	franskbroed	25,00
 8 	rugbroed	17,75
 18	yoghurt		12,25
-32  krydsermissiler 20,21

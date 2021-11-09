@@ -29,6 +29,8 @@ public class Main {
 
         udskriv(array, antalVarer);
 
+        samletPris(array, antalVarer);
+
     }
         //Skrivning til txt.fil
         public static int laesFraFil(Vare[] array) throws FileNotFoundException {
@@ -57,9 +59,7 @@ public class Main {
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Varer.ser"));
 
                 for (int i = 0; i < antal; i++) {
-                    out.writeInt(array[i].getAntal());
-                    out.writeUTF(array[i].getVarer());
-                    out.writeDouble(array[i].getPris());
+                    out.writeObject(array[i]);
                 }
 
             out.close();
@@ -76,13 +76,15 @@ public class Main {
         int i = 0;
 
             try {
-                ObjectInputStream input = new ObjectInputStream(new FileInputStream("Varer.ser"));
+                FileInputStream f = new FileInputStream("Varer.ser");
 
-                while (input.available() > 0) {
-                array[i].setAntal(input.readInt());
-                array[i].setVarer(input.readUTF());
-                array[i].setPris(input.readDouble());
+                ObjectInputStream input = new ObjectInputStream(f);
+
+                while (f.available() > 0) {
+                array[i] = (Vare) input.readObject();
+                i++;
                 }
+
                 input.close();
 
             } catch (Exception e) {
@@ -92,13 +94,33 @@ public class Main {
             return i;
         }
 
+        public static void samletPris (Vare [] a, int antal) {
 
+            System.out.format("\n%-20s %20s\n", "Varenavn", "Samlet pris");
+
+            for (int i = 0; i < antal; i++) {
+
+                System.out.format("%-20s  %20.2f \n", a[i].getVarer(), a[i].getAntal() * a[i].getPris());
+
+            }
+
+        }
 
         public static void udskriv (Vare [] a, int antal) {
 
             for (int i = 0; i < antal; i++) {
+
                 System.out.format("%d %s %.2f \n",a[i].getAntal(),a[i].getVarer(),a[i].getPris());
 
             }
         }
 }
+
+
+/*
+-	Lav funktion som beregner den samlede pris for hver vare med og uden rabat.
+-	Lav funktion, som beregner saldoen for det samlede varekøb med og uden rabatter.
+-	Lav funktion, som udskriver faktura hvor der er informationer om: hvilke varer der er købt, antallet af hver vare,
+-   prisen for hver vare med og uden rabat, og den samlede saldo med og uden rabat.
+Fakturaen skal både udskrives til skærm og til en ny tekstfil ”faktura.txt”.
+ */
